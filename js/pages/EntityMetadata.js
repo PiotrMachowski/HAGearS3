@@ -2,8 +2,8 @@ var EntityMetadata = {
 	'Lights': {
 		name: 'light',
 		title: 'Lights',
-		selectedState: 'on',
-		deselectedState: 'off',
+		selectedStates: ['on'],
+		deselectedStates: ['off'],
 		select: HAServices.lightOn,
 		deselect: HAServices.lightOff,
 		defaultIcon: 'mdi-lightbulb',
@@ -14,35 +14,11 @@ var EntityMetadata = {
 			"effects"
 		]
 	},
-	'Switches': {
-		name: 'switch',
-		title: 'Switches',
-		selectedState: 'on',
-		deselectedState: 'off',
-		select: HAServices.switchOn,
-		deselect: HAServices.switchOff,
-		defaultIcon: 'mdi-flash',
-		supports: [
-			"on-off"
-		]
-	},
-	'Scripts': {
-		name: 'script',
-		title: 'Scripts',
-		selectedState: 'on',
-		deselectedState: 'off',
-		select: HAServices.scriptOn,
-		deselect: HAServices.scriptOff,
-		defaultIcon: 'mdi-file-document',
-		supports: [
-			"on-off"
-		]
-	},
 	'Covers': {
 		name: 'cover',
 		title: 'Covers',
-		selectedState: 'closed',
-		deselectedState: 'opened',
+		selectedStates: ['closed'],
+		deselectedStates: ['opened'],
 		select: HAServices.coverClose,
 		deselect: HAServices.coverOpen,
 		defaultIcon: 'mdi-blinds',
@@ -50,13 +26,77 @@ var EntityMetadata = {
 			"on-off"
 		]
 	},
+	'Switches': {
+		name: 'switch',
+		title: 'Switches',
+		selectedStates: ['on'],
+		deselectedStates: ['off'],
+		select: HAServices.switchOn,
+		deselect: HAServices.switchOff,
+		defaultIcon: 'mdi-flash',
+		supports: [
+			"on-off"
+		]
+	},
+	'Media Players': {
+		name: 'media_player',
+		title: 'Media Players',
+		selectedStates: ['on', 'playing', 'paused', 'buffering'],
+		deselectedStates: ['off', 'idle'],
+		select: HAServices.homeassistantOn,
+		deselect: HAServices.homeassistantOff,
+		defaultIcon: 'mdi-cast',
+		supports: [
+			"on-off",
+			"volume-up-down",
+			"next-previous",
+			"play-pause",
+			"mute"
+		]
+	},
+	'Input Booleans': {
+		name: 'input_boolean',
+		title: 'Input Booleans',
+		selectedStates: ['on'],
+		deselectedState: ['off'],
+		select: HAServices.inputBooleanOn,
+		deselect: HAServices.inputBooleanOff,
+		defaultIcon: 'mdi-checkbox-marked-outline',
+		supports: [
+			"on-off"
+		]
+	},
+	'Input Selects': {
+		name: 'input_select',
+		title: 'Input Selects',
+		selectedStates: [],
+		deselectedStates: [],
+		select: HAServices.inputSelectSelectOption,
+		deselect: HAServices.inputSelectSelectOption,
+		defaultIcon: 'mdi-format-list-bulleted',
+		supports: [
+			"options"
+		]
+	},
+	'Scripts': {
+		name: 'script',
+		title: 'Scripts',
+		selectedStates: ['on'],
+		deselectedState: ['off'],
+		select: HAServices.scriptOn,
+		deselect: HAServices.scriptOff,
+		defaultIcon: 'mdi-file-document',
+		supports: [
+			"on-off"
+		]
+	},
 	'Groups': {
 		name: 'group',
 		title: 'Groups',
-		selectedState: 'on',
-		deselectedState: 'off',
-		select: HAServices.groupOn,
-		deselect: HAServices.groupOff,
+		selectedStates: ['on'],
+		deselectedStates: ['off'],
+		select: HAServices.homeassistantOn,
+		deselect: HAServices.homeassistantOff,
 		defaultIcon: 'mdi-account-multiple',
 		supports: [
 			"on-off"
@@ -65,10 +105,8 @@ var EntityMetadata = {
 	'Scenes': {
 		name: 'scene',
 		title: 'Scenes',
-		// We do not want the scene to appear selected
-		// since they are always on
-		selectedState: '',
-		deselectedState: '',
+		selectedStates: [],
+		deselectedStates: [],
 		select: HAServices.sceneOn,
 		deselect: HAServices.sceneOn,
 		defaultIcon: 'mdi-palette',

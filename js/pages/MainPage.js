@@ -38,7 +38,7 @@ var MainPage = (function(){
 				.replace(/%2/g, "mdi-eye-off");
 		}
 		domString = domString + ItemTemplate.join('\n').replace(/%1/g, "Settings")
-			.replace(/%2/g, "mdi-settings");
+			.replace(/%2/g, "mdi-cog");
 
 		$('#main-nav').html(domString);
 	};

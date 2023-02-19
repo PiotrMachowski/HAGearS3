@@ -13,7 +13,9 @@ var DataManager = (function(){
 	DataManager.prototype.load = function(success, error) {
 		// Fetch home assistant entities
 		HAServices.getEntities(function(data){
-			this.entities = data;
+			
+			this.entities = data.filter(e => e.attributes.tizen_visible === true || e.attributes.tizen_order !== undefined);
+//			this.entities = data;
 
 			// Cache entities
 			localStorage.setItem('ha-entities',  JSON.stringify(this.entities));

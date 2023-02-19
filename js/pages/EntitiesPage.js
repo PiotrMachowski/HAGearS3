@@ -9,9 +9,9 @@ var EntitiesPage = (function() {
 	var TEMPLATE = [
 		'<li id="entity-obj-%1" class="li-has-toggle" >',
 			'<label>',
-					'<div class="entity-list-item name-container ui-marquee ui-marquee-gradient" data-entity-id="%1">',
-						"%2",
-					'</div>',
+				'<div class="entity-list-item name-container ui-marquee ui-marquee-gradient" data-entity-id="%1">',
+					"%2",
+				'</div>',
 				'<div class="entity-list-item-icon icon-container %3 %4" data-entity-id="%1">',
 					'<div class="mdi mdi-48px %5"></div>',
 				'</div>',
@@ -94,8 +94,19 @@ var EntitiesPage = (function() {
 				if (entity_id1 < entity_id2) return -1;
 				if (entity_id1 > entity_id2) return 1;
 			}
-			if (entity1.attributes.friendly_name.toLowerCase() < entity2.attributes.friendly_name.toLowerCase()) return -1;
-			if (entity1.attributes.friendly_name.toLowerCase() > entity2.attributes.friendly_name.toLowerCase()) return 1;
+			if(entity1.attributes.tizen_order != undefined && entity2.attributes.tizen_order != undefined)
+				return entity1.attributes.tizen_order - entity2.attributes.tizen_order;
+			if(entity1.attributes.tizen_order != undefined) return -1;
+			if(entity2.attributes.tizen_order != undefined) return 1;
+			if(entity1.attributes.friendly_name != undefined && entity2.attributes.friendly_name != undefined) {
+				if (entity1.attributes.friendly_name.toLowerCase() < entity2.attributes.friendly_name.toLowerCase()) return -1;
+				if (entity1.attributes.friendly_name.toLowerCase() > entity2.attributes.friendly_name.toLowerCase()) return 1;
+				return 0;
+			}
+			if(entity1.attributes.friendly_name != undefined) return -1;
+			if(entity2.attributes.friendly_name != undefined) return 1;
+			if (entity1.entity_id.toLowerCase() < entity2.entity_id.toLowerCase()) return -1;
+			if (entity1.entity_id.toLowerCase() > entity2.entity_id.toLowerCase()) return 1;
 			return 0;
 		});
 
@@ -110,43 +121,7 @@ var EntitiesPage = (function() {
 
 	// Helper to register click handlers for the list items
 	registerEventHandlers = function(entitiesPage, view, entities) {
-		$('.entity-list-item-icon').click(function(e) {
-			var li = e.currentTarget;
-			var entity_id = li.dataset.entityId;
-			var entity = entities.filter(function(entity){
-				if (entity.entity_id === entity_id) {
-					return true;
-				}
-			})[0];
-
-			var metadata = EntityMetadata[view];
-			if (view === "Hidden"){
-				Object.keys(EntityMetadata).forEach(function(key,index) {
-					if (entity.entity_id.startsWith(EntityMetadata[key].name + '.')) {
-						metadata = EntityMetadata[key];
-					}
-				});
-			}
-
-			// We have to flip the value since the input has changed when we get the event
-			var selected = li.classList.contains("selected");
-			if (selected) {
-				// TODO FIX makes assumptions that deselect is a function that needs to be invoked in the context of the services class
-				metadata.deselect.call(HAServices, entity_id);
-				if (metadata.title != "Scenes") {
-					entity.state = metadata.deselectedState
-					li.classList.remove("selected");
-				}
-			} else {
-				// TODO FIX makes assumptions that deselect is a function that needs to be invoked in the context of the services class
-				metadata.select.call(HAServices, entity_id);
-				if (metadata.title != "Scenes") {
-					entity.state = metadata.selectedState
-					li.classList.add("selected");
-				}
-			}
-		});
-		$('.entity-list-item').click(function(e) {
+		var clickItemFunction = function(e) {
 			var li = e.currentTarget;
 			var entity_id = li.dataset.entityId;
 			var entity = entities.filter(function(entity){
@@ -164,7 +139,49 @@ var EntitiesPage = (function() {
 			}
 			entitiesPage.createEntityPage(EntityMetadata[metadata.title], entity);
 			tau.changePage('entity');
-		});
+		};
+		
+		var clickIconFunction = function(e) {
+			var li = e.currentTarget;
+			var entity_id = li.dataset.entityId;
+			var entity = entities.filter(function(entity){
+				if (entity.entity_id === entity_id) {
+					return true;
+				}
+			})[0];
+
+			var metadata = EntityMetadata[view];
+			if (view === "Hidden"){
+				Object.keys(EntityMetadata).forEach(function(key,index) {
+					if (entity.entity_id.startsWith(EntityMetadata[key].name + '.')) {
+						metadata = EntityMetadata[key];
+					}
+				});
+			}
+			
+			if(!metadata.supports.includes("on-off"))
+				return clickItemFunction(e);
+			// We have to flip the value since the input has changed when we get the event
+			var selected = li.classList.contains("selected");
+			if (selected) {
+				// TODO FIX makes assumptions that deselect is a function that needs to be invoked in the context of the services class
+				metadata.deselect.call(HAServices, entity_id);
+				if (metadata.title != "Scenes") {
+					metadata.deselectedStates.includes(entity.state);
+					li.classList.remove("selected");
+				}
+			} else {
+				// TODO FIX makes assumptions that deselect is a function that needs to be invoked in the context of the services class
+				metadata.select.call(HAServices, entity_id);
+				if (metadata.title != "Scenes") {
+					entity.state = metadata.selectedStates[0]
+					li.classList.add("selected");
+				}
+			}
+		};
+		
+		$('.entity-list-item-icon').click(clickIconFunction);
+		$('.entity-list-item').click(clickItemFunction);
 	}
 
 	// Create a dom string representing an entity in the list
@@ -184,9 +201,12 @@ var EntitiesPage = (function() {
 		if (view !== "Hidden" && entity.attributes.icon) {
 			icon = entity.attributes.icon.replace(":", "-");
 		}
-		var selected = entity.state === metadata.selectedState ? "selected" : "";
+		var selected = metadata.selectedStates.includes(entity.state) ? "selected" : "";
+		var name = entity.attributes.friendly_name;
+		if(name === undefined)
+			name = entity.entity_id;
 		return TEMPLATE.replace(/%1/g, entity.entity_id)
-						.replace(/%2/g, entity.attributes.friendly_name)
+						.replace(/%2/g, name)
 						.replace(/%3/g, metadata.name + '-icon-container')
 						.replace(/%4/g, selected)
 						.replace(/%5/g, icon);

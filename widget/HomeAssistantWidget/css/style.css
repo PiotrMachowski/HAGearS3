@@ -17,8 +17,9 @@ body {
     position: absolute;
     height: 84px;
     width: 84px;
-    background-color: #cc0cbf !important;
-    border-radius: 50%;
+    background-color: #008cff !important;
+    border-radius: 84px;
+    overflow: hidden;
 }
 
 .container-left {
@@ -27,8 +28,9 @@ body {
     position: absolute;
     height: 84px;
     width: 84px;
-    background-color: #0c0cce !important;
-    border-radius: 50%;
+    background-color: #008cff !important;
+    border-radius: 84px;
+    overflow: hidden;
 }
 
 .container-bottom-left {
@@ -37,8 +39,9 @@ body {
     position: absolute;
     height: 84px;
     width: 84px;
-    background-color: #ed3838 !important;
-    border-radius: 50%;
+    background-color: #008cff !important;
+    border-radius: 84px;
+    overflow: hidden;
 }
 
 .container-top-right {
@@ -47,8 +50,9 @@ body {
     position: absolute;
     height: 84px;
     width: 84px;
-    background-color: #fdd835 !important;
-    border-radius: 50%;
+    background-color: #008cff !important;
+    border-radius: 84px;
+    overflow: hidden;
 }
 
 .container-right {
@@ -57,8 +61,9 @@ body {
     position: absolute;
     height: 84px;
     width: 84px;
-    background-color: #00cc44 !important;
-    border-radius: 50%;
+    background-color: #008cff !important;
+    border-radius: 84px;
+    overflow: hidden;
 }
 
 .container-bottom-right {
@@ -67,8 +72,9 @@ body {
     position: absolute;
     height: 84px;
     width: 84px;
-    background-color: #1ee8ff !important;
-    border-radius: 50%;
+    background-color: #008cff !important;
+    border-radius: 84px;
+    overflow: hidden;
 }
 
 .container-center {
@@ -78,7 +84,8 @@ body {
     height: 108px;
     width: 108px;
     background-color: #45c0ef !important;
-    border-radius: 50%;
+    border-radius: 108px;
+    overflow: hidden;
 }
 
 .image {
